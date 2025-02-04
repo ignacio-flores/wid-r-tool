@@ -14,7 +14,7 @@ The package is not yet available on CRAN. But you can install the
 development version by typing:
 ```{r}
 install.packages("devtools")
-devtools::install_github("thomasblanchet/wid-r-tool")
+devtools::install_github("world-inequality-database/wid-r-tool")
 ```
 
 ## Usage
