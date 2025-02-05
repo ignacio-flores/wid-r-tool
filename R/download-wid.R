@@ -391,7 +391,7 @@ download_wid <- function(indicators = "all", areas = "all", years = "all", perc 
         data <- merge(data, data_metadata,
             by = c("variable", "country"),
             all.x = TRUE,
-            all.y = TRUE
+            all.y = FALSE
         )
     }
 
