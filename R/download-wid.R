@@ -402,7 +402,7 @@ download_wid <- function(indicators = "all", areas = "all", years = "all", perc 
     if (metadata) {
         data <- data[, c(
             "country", "countryname", "variable", "percentile", "year", "value",
-            "shortname", "shortdes", "pop", "age", "source", "imputation", "quality"
+            "shortname", "shortdes", "pop", "age", "source", "imputation", "quality", "method"
         )]
     } else {
         data <- data[, c("country", "variable", "percentile", "year", "value")]
