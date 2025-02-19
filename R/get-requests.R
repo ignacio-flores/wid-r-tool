@@ -159,7 +159,7 @@ get_data_variables <- function(areas, variables, no_extrapolation = FALSE) {
 #' @importFrom base64enc base64encode
 #' @importFrom jsonlite fromJSON
 
-get_metadata_variables <- function(areas, variables, report_missing = TRUE) {
+get_metadata_variables <- function(areas, variables, report_missing = TRUE, collected_metadata = NULL) {
     # Concatenate area codes, variables
     query_areas <- paste(areas, collapse = ",")
     query_variables <- paste(variables, collapse = ",")
@@ -177,6 +177,7 @@ get_metadata_variables <- function(areas, variables, report_missing = TRUE) {
     response_json <- response_json[[1]]$metadata_func
 
     missing_metadata <- list()
+    all_returned_areas <- c()
 
     for (json_variable in response_json) {
         # Extract variable name
@@ -191,6 +192,8 @@ get_metadata_variables <- function(areas, variables, report_missing = TRUE) {
         # The item "unit" (5th position) is always filled, so we use it to
         # loop over the different countries
         for (meta_country in json_units) {
+          
+            all_returned_areas <- c(all_returned_areas, meta_country$country)
             meta_note <- NULL
             for (note in json_notes[[1]][[1]]) {
                 if (note$alpha2 == meta_country$country) {
@@ -227,60 +230,37 @@ get_metadata_variables <- function(areas, variables, report_missing = TRUE) {
 
             # Identify missing fields
             missing_fields <- names(meta)[sapply(meta, function(x) all(is.na(x)))]
-
             if (length(missing_fields) > 0) {
-                if (!(variable %in% names(missing_metadata))) {
-                    missing_metadata[[variable]] <- list(all_missing = c(), partial_missing = list())
-                }
-
-                if (length(missing_fields) == length(meta)) {
-                    # All metadata is missing for this country
-                    missing_metadata[[variable]]$all_missing <- c(missing_metadata[[variable]]$all_missing, meta$country)
-                } else {
-                    # Only some fields are missing
-                    missing_metadata[[variable]]$partial_missing[[meta$country]] <- missing_fields
-                }
+              if (!(variable %in% names(collected_metadata))) {
+                collected_metadata[[variable]] <- list()
+              }
+              key <- paste(sort(missing_fields), collapse = ", ")  
+              if (!(key %in% names(collected_metadata[[variable]]))) {
+                collected_metadata[[variable]][[key]] <- c()
+              }
+              #collected_metadata[[variable]][[key]] <- c(collected_metadata[[variable]][[key]], meta$country)
+              collected_metadata[[variable]][[key]] <- unique(c(collected_metadata[[variable]][[key]], meta$country))
+              
             }
 
             response_table <- rbind(response_table, meta)
         }
-    }
-
-    # Show message if missing metadata was detected
-    if (length(missing_metadata) > 0 && report_missing == FALSE) {
-        message("Some metadata fields are missing for certain countries or variables.")
-        message("Run `get_metadata_variables(..., report_missing = TRUE)` to see details.")
-    }
-
-    # Print organized missing metadata summary if the option is enabled
-    if (report_missing == TRUE && length(missing_metadata) > 0) {
-        message("Missing Metadata Summary:\n")
-        for (var in names(missing_metadata)) {
-            cat("Variable:", var, "\n")
-            if (length(missing_metadata[[var]]$all_missing) > 0) {
-                cat("  All metadata missing for:", paste(missing_metadata[[var]]$all_missing, collapse = ", "), "\n")
-            }
-            if (length(missing_metadata[[var]]$partial_missing) > 0) {
-                cat("  Partial metadata missing:\n")
-                for (country in names(missing_metadata[[var]]$partial_missing)) {
-                    cat("    -", country, ":", paste(missing_metadata[[var]]$partial_missing[[country]], collapse = ", "), "\n")
-                }
-            }
+        
+        # **After processing all countries, check for completely missing ones**
+        missing_countries <- setdiff(areas, all_returned_areas)
+        if (length(missing_countries) > 0) {
+          if (!(variable %in% names(collected_metadata))) {
+            collected_metadata[[variable]] <- list()
+          }
+          if (!("Completely missing" %in% names(collected_metadata[[variable]]))) {
+            collected_metadata[[variable]][["Completely missing"]] <- c()
+          }
+          collected_metadata[[variable]][["Completely missing"]] <- unique(c(
+            collected_metadata[[variable]][["Completely missing"]],
+            missing_countries
+          ))
         }
-        cat("\n")
     }
-
-    # # Show message if missing metadata was detected
-    # if (length(missing_metadata) > 0 && !report_missing) {
-    #     message("Some metadata fields are missing for certain countries or variables.")
-    #     message("Run `get_metadata_variables(..., report_missing = TRUE)` to see details.")
-    # }
-    #
-    # # Print missing metadata summary if the option is enabled
-    # if (report_missing && length(missing_metadata) > 0) {
-    #     print("Missing metadata detected:")
-    #     print(missing_metadata)
-    # }
 
     # Clarify meaning of 'imputation'
     response_table$imputation[response_table$imputation == "region"]    <- "regional imputation"
@@ -289,6 +269,7 @@ get_metadata_variables <- function(areas, variables, report_missing = TRUE) {
     response_table$imputation[response_table$imputation == "full"]      <- "surveys and tax microdata"
     response_table$imputation[response_table$imputation == "rescaling"] <- "rescaled fiscal income"
 
-    return(response_table)
+    return(list(response_table = response_table, collected_metadata = collected_metadata))
+    #return(response_table)
 }
 

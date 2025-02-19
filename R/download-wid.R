@@ -202,10 +202,9 @@
 download_wid <- function(indicators = "all", areas = "all", years = "all", perc = "all",
                          ages = "all", pop = "all", metadata = FALSE,
                          include_extrapolations = TRUE, verbose = FALSE) {
-
-    # Make sure that at least some indicators and some areas were selected
-    if (indicators == "all" && areas == "all") {
-        stop("you must select at least some specific indicators, areas, or both.")
+  
+    if (identical(indicators, "all") && identical(areas, "all")) {
+      stop("you must select at least some specific indicators, areas, or both.")
     }
 
     # Check the format of arguments
@@ -373,14 +372,44 @@ download_wid <- function(indicators = "all", areas = "all", years = "all", perc 
             sep = "_"
         )
         variables <- variables[!duplicated(variables[, c("country", "variable")]), ]
-
         variables$chunk <- floor(1:nrow(variables)/50)
-        data_metadata <- ddply(variables, "chunk", function(variables) {
-            query_codes <- unique(variables$metadata_codes)
-            query_areas <- unique(variables$country)
-
-            return(get_metadata_variables(query_areas, query_codes))
+        collected_metadata <- list()
+        
+        data_metadata_list <- dlply(variables, "chunk", function(variables) {
+          query_codes <- unique(variables$metadata_codes)
+          query_areas <- unique(variables$country)
+          
+          result <- get_metadata_variables(query_areas, query_codes, report_missing = FALSE, collected_metadata)
+          collected_metadata <<- result$collected_metadata  # Update global collection
+          return(result$response_table)
         }, .progress = ifelse(verbose, "text", "none"))
+        
+        # Combine all metadata into one data frame
+        data_metadata <- do.call(rbind, data_metadata_list)
+        
+        #Print missing metadata info 
+        if (length(collected_metadata) > 0) {
+          message("\nMissing Metadata:")
+          for (var in names(collected_metadata)) {
+            cat("\n Variable:", var, "\n")
+            
+            # Print "Completely Missing" first, if applicable
+            if ("Completely missing" %in% names(collected_metadata[[var]])) {
+              cat("  Completely missing (no metadata at all):\n")
+              cat("      Areas:", paste(sort(collected_metadata[[var]][["Completely missing"]]), collapse = ", "), "\n\n")
+            }
+            
+            # Print other missing fields
+            for (key in names(collected_metadata[[var]])) {
+              if (key != "Completely missing") {  # Skip since we printed it already
+                cat("  Missing fields:", key, "\n")
+                cat("      Areas:", paste(sort(collected_metadata[[var]][[key]]), collapse = ", "), "\n\n")
+              }
+            }
+          }
+        }
+        
+        
         data_metadata$chunk <- NULL
 
         # Remove percentile from variable
