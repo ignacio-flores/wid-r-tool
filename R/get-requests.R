@@ -159,7 +159,7 @@ get_data_variables <- function(areas, variables, no_extrapolation = FALSE) {
 #' @importFrom base64enc base64encode
 #' @importFrom jsonlite fromJSON
 
-get_metadata_variables <- function(areas, variables) {
+get_metadata_variables <- function(areas, variables, report_missing = TRUE, collected_metadata = NULL) {
     # Concatenate area codes, variables
     query_areas <- paste(areas, collapse = ",")
     query_variables <- paste(variables, collapse = ",")
@@ -175,6 +175,10 @@ get_metadata_variables <- function(areas, variables) {
 
     response_table <- data.frame()
     response_json <- response_json[[1]]$metadata_func
+
+    missing_metadata <- list()
+    all_returned_areas <- c()
+
     for (json_variable in response_json) {
         # Extract variable name
         variable <- names(json_variable)
@@ -188,6 +192,8 @@ get_metadata_variables <- function(areas, variables) {
         # The item "unit" (5th position) is always filled, so we use it to
         # loop over the different countries
         for (meta_country in json_units) {
+          
+            all_returned_areas <- c(all_returned_areas, meta_country$country)
             meta_note <- NULL
             for (note in json_notes[[1]][[1]]) {
                 if (note$alpha2 == meta_country$country) {
@@ -215,12 +221,44 @@ get_metadata_variables <- function(areas, variables) {
             meta$country     <- meta_country$country
             meta$countryname <- meta_country$country_name
 
-            meta$method     <- meta_note$method
-            meta$source     <- meta_note$source
-            meta$quality    <- meta_note$data_quality
-            meta$imputation <- meta_note$imputation
+            # Handle potential missing metadata by setting them to NA
+            meta$method     <- if (!is.null(meta_note$method)) meta_note$method else NA
+            meta$source     <- if (!is.null(meta_note$source)) meta_note$source else NA
+            meta$quality    <- if (!is.null(meta_note$data_quality)) meta_note$data_quality else NA
+            meta$imputation <- if (!is.null(meta_note$imputation)) meta_note$imputation else NA
+
+
+            # Identify missing fields
+            missing_fields <- names(meta)[sapply(meta, function(x) all(is.na(x)))]
+            if (length(missing_fields) > 0) {
+              if (!(variable %in% names(collected_metadata))) {
+                collected_metadata[[variable]] <- list()
+              }
+              key <- paste(sort(missing_fields), collapse = ", ")  
+              if (!(key %in% names(collected_metadata[[variable]]))) {
+                collected_metadata[[variable]][[key]] <- c()
+              }
+              #collected_metadata[[variable]][[key]] <- c(collected_metadata[[variable]][[key]], meta$country)
+              collected_metadata[[variable]][[key]] <- unique(c(collected_metadata[[variable]][[key]], meta$country))
+              
+            }
 
             response_table <- rbind(response_table, meta)
+        }
+        
+        # **After processing all countries, check for completely missing ones**
+        missing_countries <- setdiff(areas, all_returned_areas)
+        if (length(missing_countries) > 0) {
+          if (!(variable %in% names(collected_metadata))) {
+            collected_metadata[[variable]] <- list()
+          }
+          if (!("Completely missing" %in% names(collected_metadata[[variable]]))) {
+            collected_metadata[[variable]][["Completely missing"]] <- c()
+          }
+          collected_metadata[[variable]][["Completely missing"]] <- unique(c(
+            collected_metadata[[variable]][["Completely missing"]],
+            missing_countries
+          ))
         }
     }
 
@@ -231,6 +269,7 @@ get_metadata_variables <- function(areas, variables) {
     response_table$imputation[response_table$imputation == "full"]      <- "surveys and tax microdata"
     response_table$imputation[response_table$imputation == "rescaling"] <- "rescaled fiscal income"
 
-    return(response_table)
+    return(list(response_table = response_table, collected_metadata = collected_metadata))
+    #return(response_table)
 }
 

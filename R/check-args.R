@@ -27,13 +27,13 @@ check_indicators <- function(indicators) {
 #' @param areas List of area codes
 
 check_areas <- function(areas) {
-    if (length(areas) > 1 || areas != "all") {
-        invalid <- !grepl("^[A-Z]{2}(-[A-Z]{2})?$", areas)
-        if (any(invalid)) {
-            stop(paste("areas codes must take the form XX or XX-YY, the following are",
-                "invalid:", paste(areas[invalid], collapse=", ")))
-        }
+  if (length(areas) > 1 || areas != "all") {
+    invalid <- !grepl("^[A-Z]{2}(-[A-Z]{2,3})?$", areas)
+    if (any(invalid)) {
+      stop(paste("Area codes must take the form XX, XX-YY, or XX-YYY. The following are invalid:",
+                 paste(areas[invalid], collapse=", ")))
     }
+  }
 }
 
 #' @title Check list of years
