@@ -375,7 +375,7 @@ download_wid <- function(indicators = "all", areas = "all", years = "all", perc 
         variables$chunk <- floor(1:nrow(variables)/50)
         collected_metadata <- list()
         
-        data_metadata_list <- dlply(variables, "chunk", function(variables) {
+        data_metadata_list <- plyr::dlply(variables, "chunk", function(variables) {
           query_codes <- unique(variables$metadata_codes)
           query_areas <- unique(variables$country)
           
@@ -420,7 +420,7 @@ download_wid <- function(indicators = "all", areas = "all", years = "all", perc 
         data <- merge(data, data_metadata,
             by = c("variable", "country"),
             all.x = TRUE,
-            all.y = TRUE
+            all.y = FALSE
         )
     }
 
