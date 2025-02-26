@@ -4,7 +4,12 @@
 \alias{get_metadata_variables}
 \title{Get metadata associated to a list of variables}
 \usage{
-get_metadata_variables(areas, variables)
+get_metadata_variables(
+  areas,
+  variables,
+  report_missing = TRUE,
+  collected_metadata = NULL
+)
 }
 \arguments{
 \item{areas}{List of area codes.}

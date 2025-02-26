@@ -22,7 +22,8 @@ code names of the indicators in the database. Default is \code{"all"} for all
 indicators. See 'Details' for more.}
 
 \item{areas}{List of strings, or \code{"all"}: area code names of the
-database. \code{"XX"} for countries/regions, \code{"XX-YY"} for subregions.
+database. \code{"XX"} for countries/regions, 
+\code{"XX-YY"} for infra-national regions. \code{"XX-YYY"} for supra-national regions.
 Default is \code{"all"} for all areas. See 'Details' for more.}
 
 \item{years}{Numerical vector, or \code{"all"}: years to retrieve.
@@ -119,11 +120,22 @@ given series type for a given income or wealth concept. The first letter
 correspond to the type of series. Some of the most common possibilities include:
 \tabular{rcl}{
 \bold{one-letter code} \tab      \tab \bold{description}     \cr
-\code{a} \tab      \tab average             \cr
-\code{s} \tab      \tab share               \cr
-\code{t} \tab      \tab threshold           \cr
-\code{m} \tab      \tab macroeconomic total \cr
-\code{w} \tab      \tab wealth/income ratio \cr
+\code{a} \tab      \tab average (local currency unit, last year’s prices) \cr
+\code{b} \tab      \tab inverted Pareto-Lorenz coefficient \cr
+\code{f} \tab      \tab female population (fraction between 0 and 1) \cr
+\code{g} \tab      \tab Gini coefficient (between 0 and 1) \cr
+\code{i} \tab      \tab index \cr
+\code{n} \tab      \tab population \cr
+\code{s} \tab      \tab share (fraction between 0 and 1) \cr
+\code{t} \tab      \tab threshold (local currency unit, last year’s prices) \cr
+\code{m} \tab      \tab total (local currency unit, last year’s prices) \cr
+\code{p} \tab      \tab proportion of women (fraction between 0 and 1) \cr
+\code{w} \tab      \tab wealth-to-income ratio or labor/capital share (fraction of national income) \cr
+\code{r} \tab      \tab Top 10/Bottom 50 ratio  \cr
+\code{x} \tab      \tab exchange rate (market or PPP)  \cr
+\code{e} \tab      \tab Total emissions (tons of CO2 equivalent emissions) \cr
+\code{k} \tab      \tab Per capita emissions (tons of CO2 equivalent emissions) \cr
+\code{l} \tab      \tab Average per capita group emissions (tons of CO2 equivalent per capita emissions) \cr
 }
 
 The next five letters correspond a concept (usually of income and wealth).
@@ -139,7 +151,8 @@ Some of the most common possibilities include:
 
 For example, \code{sfiinc} corresponds to the share of fiscal income,
 \code{ahweal} corresponds to average personal wealth. If you don't specify
-any indicator, it defaults to \code{"all"} and downloads all available indicators.
+any indicator, it defaults to \code{"all"} and downloads all available indicators. 
+Check \url{https://wid.world/codes-dictionary/} for a full list of codes.
 }
 
 \subsection{Area codes}{
@@ -182,12 +195,16 @@ age categories to retrieve. Ages are coded using 3-digit codes.
 Some of the most common possibilities include:
 \tabular{rcl}{
 \bold{three-digit code} \tab      \tab \bold{description} \cr
-\code{999} \tab      \tab all ages                          \cr
-\code{992} \tab      \tab adults, including elderly (20+)   \cr
-\code{996} \tab      \tab adults, excluding elderly (20-65) \cr
+\code{999} \tab      \tab all ages \cr
+\code{014} \tab      \tab ages 0 to 14 \cr
+\code{156} \tab      \tab ages 15 to 64 \cr
+\code{997} \tab      \tab ages 65 and older \cr
+\code{991} \tab      \tab ages below 20 \cr
+\code{992} \tab      \tab ages 20 and older \cr
 }
 If you don't specify any age, it defaults to \code{"all"} and downloads
-data for all available age groups.
+data for all available age groups. Visit \url{https://wid.world/codes-dictionary/} 
+for a comprehensive list of options.
 }
 
 \subsection{Population types}{
@@ -197,12 +214,15 @@ population codes. They are coded using one-letter codes. Some of the
 most common possibilities include:
 \tabular{rcl}{
 \bold{one-letter code} \tab      \tab \bold{description} \cr
-\code{i} \tab      \tab individuals                                                             \cr
-\code{t} \tab      \tab tax units                                                               \cr
-\code{j} \tab      \tab equal-split adults (ie. income or wealth divided equally among spouses) \cr
+\code{i} \tab      \tab individuals \cr
+\code{j} \tab      \tab equal-split adults (i.e., income or wealth divided equally among spouses) \cr
+\code{m} \tab      \tab male \cr
+\code{f} \tab      \tab female \cr
+\code{t} \tab      \tab tax unit \cr
+\code{e} \tab      \tab employed \cr
 }
 If you don't specify any code, it defaults to \code{"all"}
-and downloads data for all types of population.
+and downloads data for all available populations.
 }
 
 \subsection{Extrapolations/interpolations}{
@@ -220,5 +240,5 @@ For that, use the option \code{include_extrapolations = FALSE}.
 }
 }
 \author{
-Thomas Blanchet
+Thomas Blanchet, with updates by Ignacio Flores
 }

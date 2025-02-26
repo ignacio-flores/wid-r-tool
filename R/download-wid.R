@@ -1,6 +1,6 @@
 #' @title Download data from WID.world
 #'
-#' @author Thomas Blanchet (updated in february 2025 by Ignacio Flores)
+#' @author Thomas Blanchet, with updates by Ignacio Flores
 #'
 #' @description Downloads data from the World Wealth and Income Database
 #' (\url{http://WID.world}) into a \code{data.frame}.
@@ -101,7 +101,7 @@
 #' For example, \code{sfiinc} corresponds to the share of fiscal income,
 #' \code{ahweal} corresponds to average personal wealth. If you don't specify
 #' any indicator, it defaults to \code{"all"} and downloads all available indicators. 
-#' Check https://wid.world/codes-dictionary/ for a full list of codes.
+#' Check \url{https://wid.world/codes-dictionary/} for a full list of codes.
 #' }
 #'
 #' \subsection{Area codes}{
@@ -144,7 +144,7 @@
 #' Some of the most common possibilities include:
 #' \tabular{rcl}{
 #' \bold{three-digit code} \tab      \tab \bold{description} \cr
-#' #' \code{999} \tab      \tab all ages \cr
+#' \code{999} \tab      \tab all ages \cr
 #' \code{014} \tab      \tab ages 0 to 14 \cr
 #' \code{156} \tab      \tab ages 15 to 64 \cr
 #' \code{997} \tab      \tab ages 65 and older \cr
@@ -152,7 +152,7 @@
 #' \code{992} \tab      \tab ages 20 and older \cr
 #' }
 #' If you don't specify any age, it defaults to \code{"all"} and downloads
-#' data for all available age groups. Visit https://wid.world/codes-dictionary/ 
+#' data for all available age groups. Visit \url{https://wid.world/codes-dictionary/} 
 #' for a comprehensive list of options.
 #' }
 #'
