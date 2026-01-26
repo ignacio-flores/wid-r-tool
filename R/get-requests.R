@@ -11,6 +11,7 @@
 #' @importFrom httr GET add_headers content
 #' @importFrom base64enc base64encode
 #' @importFrom jsonlite fromJSON
+#' @importFrom utils capture.output str
 
 environment <- "prod" # "dev" or "prod"
 base_api_url <- paste0("https://rfap9nitz6.execute-api.eu-west-1.amazonaws.com/", environment, "/")
@@ -188,7 +189,8 @@ get_data_variables <- function(areas, variables, no_extrapolation = FALSE) {
 #'
 #' @param areas List of area codes.
 #' @param variables List of variables, of the form: \code{"xxxxxx_pXXpYY_999_i"}
-#'
+#' @param report_missing Logical: report any missing metadata when set to TRUE.
+#' @param collected_metadata List used to accumulate missing metadata across calls.
 #' @importFrom httr GET add_headers content
 #' @importFrom base64enc base64encode
 #' @importFrom jsonlite fromJSON

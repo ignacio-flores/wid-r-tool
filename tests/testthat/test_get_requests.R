@@ -25,11 +25,11 @@ test_that("request for data works as expected", {
 test_that("request for metadata works as expected", {
     skip_on_cran()
     skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
-    df <- get_metadata_variables("FR", "sptinc_p99p100_992_t")
+    df <- get_metadata_variables("FR", "sptinc_p99p100_992_t")$response_table
     expect_equal(nrow(df), 1)
     expect_equal(ncol(df), 15)
 
-    df <- get_metadata_variables("FR", "xxxxxx_p99p100_992_t")
+    df <- get_metadata_variables("FR", "xxxxxx_p99p100_992_t")$response_table
     expect_equal(nrow(df), 0)
 })
 
