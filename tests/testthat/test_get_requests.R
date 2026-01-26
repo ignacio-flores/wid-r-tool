@@ -2,7 +2,7 @@ context("Server requests")
 
 test_that("request for variables in area(s) works as expected", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     df <- get_variables_areas("FR")
     expect_equal(nrow(df), 16535)
     expect_equal(ncol(df), 5)
@@ -13,7 +13,7 @@ test_that("request for variables in area(s) works as expected", {
 
 test_that("request for data works as expected", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     df <- get_data_variables("FR", "sptinc_p99p100_992_t")
     expect_equal(nrow(df), 102)
     expect_equal(ncol(df), 4)
@@ -24,7 +24,7 @@ test_that("request for data works as expected", {
 
 test_that("request for metadata works as expected", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     df <- get_metadata_variables("FR", "sptinc_p99p100_992_t")
     expect_equal(nrow(df), 1)
     expect_equal(ncol(df), 15)

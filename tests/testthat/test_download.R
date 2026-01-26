@@ -2,7 +2,7 @@ context("Test overall downloads")
 
 test_that("we can download mutliple indicators for a single country", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     data <- download_wid(
         areas = "FR",
         indicators = c("sfiinc", "aptinc"),
@@ -21,7 +21,7 @@ test_that("we can download mutliple indicators for a single country", {
 
 test_that("we can download a single indicator for multiple countries", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     data <- download_wid(
         areas = c("FR", "US"),
         indicators = "sptinc",
@@ -44,7 +44,7 @@ test_that("we can download a single indicator for multiple countries", {
 
 test_that("we can download population data", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     data <- download_wid(
         areas = "DE",
         indicators = "npopul"
@@ -61,7 +61,7 @@ test_that("we can download population data", {
 
 test_that("we can download metadata", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     data <- download_wid(
         areas = "FR",
         indicators = "sptinc",
@@ -81,7 +81,7 @@ test_that("we can download metadata", {
 
 test_that("we can exclude extrapolations/interpolations", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     download_wid(
         indicators = "acainc",
         areas = "all",
