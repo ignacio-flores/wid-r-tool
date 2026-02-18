@@ -112,7 +112,7 @@ a top 1\% share of 20\% is given as 0.2. A wealth/income ratio of
 The arguments of the command follow a nomenclature specific to WID.world.
 We provide more details with a few examples below. \strong{For the complete
 up-to-date documentation of the structure of the database, please visit
-\url{https://wid.world/codes-dictionary}.}
+\url{https://wid.world/codes-dictionary/}.}
 
 \subsection{Indicators}{
 The argument \code{indicators} is a vector of 6-letter codes that corresponds to a
@@ -152,7 +152,7 @@ Some of the most common possibilities include:
 For example, \code{sfiinc} corresponds to the share of fiscal income,
 \code{ahweal} corresponds to average personal wealth. If you don't specify
 any indicator, it defaults to \code{"all"} and downloads all available indicators. 
-Check \url{https://wid.world/codes-dictionary} for a full list of codes.
+Check \url{https://wid.world/codes-dictionary/} for a full list of codes.
 }
 
 \subsection{Area codes}{
@@ -203,7 +203,7 @@ Some of the most common possibilities include:
 \code{992} \tab      \tab ages 20 and older \cr
 }
 If you don't specify any age, it defaults to \code{"all"} and downloads
-data for all available age groups. Visit \url{https://wid.world/codes-dictionary}
+data for all available age groups. Visit \url{https://wid.world/codes-dictionary/}
 for a comprehensive list of options.
 }
 
