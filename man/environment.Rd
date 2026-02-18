@@ -10,14 +10,8 @@ An object of class \code{character} of length 1.
 \usage{
 environment
 }
-\arguments{
-\item{areas}{List of area codes.}
-
-\item{sixlet}{Six-letter code for which to fetch variables.}
-}
 \description{
-Perform the GET request to the server to retrieve all
-variables for a list of area codes.
+Package API environment selector.
 }
 \author{
 Thomas Blanchet

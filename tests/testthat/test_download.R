@@ -66,7 +66,7 @@ test_that("we can download metadata", {
         areas = "FR",
         indicators = "sptinc",
         perc = "p99p100",
-        age = "992",
+        ages = "992",
         pop = "j",
         metadata = TRUE
     )
@@ -75,8 +75,20 @@ test_that("we can download metadata", {
     expect_true(all(data$countryname == "France"))
     expect_true(all(data$variable == "sptinc992j"))
     expect_true(all(data$percentile == "p99p100"))
-    expect_true(all(data$quality == "4"))
-    expect_true(all(data$imputation == "surveys and tax data"))
+    expect_true(all(
+        is.na(data$quality) |
+        as.character(data$quality) %in% as.character(0:5)
+    ))
+    expect_true(all(
+        is.na(data$imputation) |
+        data$imputation %in% c(
+            "regional imputation",
+            "adjusted surveys",
+            "surveys and tax data",
+            "surveys and tax microdata",
+            "rescaled fiscal income"
+        )
+    ))
 })
 
 test_that("we can exclude extrapolations/interpolations", {
@@ -98,7 +110,7 @@ test_that("we can exclude extrapolations/interpolations", {
         areas = "MZ",
         indicators = "sptinc",
         perc = "p99p100",
-        age = "992",
+        ages = "992",
         pop = "j",
         include_extrapolations = TRUE
     )
@@ -107,7 +119,7 @@ test_that("we can exclude extrapolations/interpolations", {
         areas = "MZ",
         indicators = "sptinc",
         perc = "p99p100",
-        age = "992",
+        ages = "992",
         pop = "j",
         include_extrapolations = FALSE
     )
