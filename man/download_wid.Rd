@@ -81,7 +81,7 @@ following columns:
 }
 \description{
 Downloads data from the World Wealth and Income Database
-(\url{http://WID.world}) into a \code{data.frame}.
+(\url{https://wid.world}) into a \code{data.frame}.
 Type \code{vignette("wid-demo")} for a detailed presentation.
 }
 \details{
@@ -152,7 +152,7 @@ Some of the most common possibilities include:
 For example, \code{sfiinc} corresponds to the share of fiscal income,
 \code{ahweal} corresponds to average personal wealth. If you don't specify
 any indicator, it defaults to \code{"all"} and downloads all available indicators. 
-Check \url{https://wid.world/codes-dictionary/} for a full list of codes.
+Check \url{https://wid.world/codes-dictionary} for a full list of codes.
 }
 
 \subsection{Area codes}{
@@ -203,7 +203,7 @@ Some of the most common possibilities include:
 \code{992} \tab      \tab ages 20 and older \cr
 }
 If you don't specify any age, it defaults to \code{"all"} and downloads
-data for all available age groups. Visit \url{https://wid.world/codes-dictionary/} 
+data for all available age groups. Visit \url{https://wid.world/codes-dictionary}
 for a comprehensive list of options.
 }
 
