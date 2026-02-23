@@ -1,30 +1,33 @@
 Package: wid
 Type: Package
-Title: Download Data from WID.world
-Version: 0.0.0.9000
-Authors@R: person("Thomas", "Blanchet", email="thomas.blanchet@wid.world", role=c("aut", "cre"))
-Description: This package lets downloads data from the online World Wealth and
-    Income Database (WID.world) directly into R. The World Wealth and Income
-    Database is an extensive source on the historical evolution of the
-    distribution of income and wealth both within and between countries.
-    It relies on the combined effort of an international network of over a
-    hundred researchers covering more than seventy countries from all continents.
+Title: Download Data from the World Inequality Database
+Version: 0.0.1
+Authors@R: c(person("Thomas", "Blanchet", email = "thomas.blanchet@wid.world", role = "aut"),person("Ignacio", "Flores", email = "stats@wid.world", role = "cre"))
+Author: Thomas Blanchet [aut],
+    Ignacio Flores [cre]
+Maintainer: Ignacio Flores <stats@wid.world>
+Description: Download data from the online World Inequality Database directly
+    into R. Data are retrieved through the webservice
+    <https://rfap9nitz6.execute-api.eu-west-1.amazonaws.com/prod/>. The
+    World Inequality Database is an extensive source on the historical
+    evolution of the distribution of income and wealth both within and
+    between countries. It relies on the combined effort of an international
+    network of over a hundred researchers covering more than seventy
+    countries from all continents.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 7.1.2
 Depends: R (>= 2.10)
 Imports:
     httr (>= 1.2.1),
     base64enc (>= 0.1),
     plyr (>= 1.8.4),
-    stringi (>= 1.4.3),
     jsonlite (>= 1.6.1)
 Suggests:
     testthat (>= 1.0.2),
     knitr (>= 1.16),
     rmarkdown (>= 1.6),
+    dplyr (>= 1.0.0),
     ggplot2 (>= 2.2.1),
     scales (>= 0.4.1),
     tidyverse (>= 1.1.1)
-VignetteBuilder: knitr

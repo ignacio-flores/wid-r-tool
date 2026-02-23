@@ -2,7 +2,7 @@ context("Test overall downloads")
 
 test_that("we can download mutliple indicators for a single country", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     data <- download_wid(
         areas = "FR",
         indicators = c("sfiinc", "aptinc"),
@@ -21,7 +21,7 @@ test_that("we can download mutliple indicators for a single country", {
 
 test_that("we can download a single indicator for multiple countries", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     data <- download_wid(
         areas = c("FR", "US"),
         indicators = "sptinc",
@@ -44,7 +44,7 @@ test_that("we can download a single indicator for multiple countries", {
 
 test_that("we can download population data", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     data <- download_wid(
         areas = "DE",
         indicators = "npopul"
@@ -61,12 +61,12 @@ test_that("we can download population data", {
 
 test_that("we can download metadata", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     data <- download_wid(
         areas = "FR",
         indicators = "sptinc",
         perc = "p99p100",
-        age = "992",
+        ages = "992",
         pop = "j",
         metadata = TRUE
     )
@@ -75,13 +75,25 @@ test_that("we can download metadata", {
     expect_true(all(data$countryname == "France"))
     expect_true(all(data$variable == "sptinc992j"))
     expect_true(all(data$percentile == "p99p100"))
-    expect_true(all(data$quality == "4"))
-    expect_true(all(data$imputation == "surveys and tax data"))
+    expect_true(all(
+        is.na(data$quality) |
+        as.character(data$quality) %in% as.character(0:5)
+    ))
+    expect_true(all(
+        is.na(data$imputation) |
+        data$imputation %in% c(
+            "regional imputation",
+            "adjusted surveys",
+            "surveys and tax data",
+            "surveys and tax microdata",
+            "rescaled fiscal income"
+        )
+    ))
 })
 
 test_that("we can exclude extrapolations/interpolations", {
     skip_on_cran()
-
+    skip_if_not(identical(Sys.getenv("NOT_CRAN"), "true"))
     download_wid(
         indicators = "acainc",
         areas = "all",
@@ -98,7 +110,7 @@ test_that("we can exclude extrapolations/interpolations", {
         areas = "MZ",
         indicators = "sptinc",
         perc = "p99p100",
-        age = "992",
+        ages = "992",
         pop = "j",
         include_extrapolations = TRUE
     )
@@ -107,7 +119,7 @@ test_that("we can exclude extrapolations/interpolations", {
         areas = "MZ",
         indicators = "sptinc",
         perc = "p99p100",
-        age = "992",
+        ages = "992",
         pop = "j",
         include_extrapolations = FALSE
     )

@@ -17,13 +17,13 @@ test_that("correctly checks indicator names", {
 
 test_that("correctly checks area codes", {
     expect_error(check_areas("00"),
-        regexp="areas codes must take the form XX or XX-YY, the following are invalid: 00", fixed=TRUE)
+        regexp="Area codes must take the form XX, XX-YY, or XX-YYY. The following are invalid: 00", fixed=TRUE)
     expect_error(check_areas(c("00", "01")),
-        regexp="areas codes must take the form XX or XX-YY, the following are invalid: 00, 01", fixed=TRUE)
+        regexp="Area codes must take the form XX, XX-YY, or XX-YYY. The following are invalid: 00, 01", fixed=TRUE)
     expect_error(check_areas(c("00", "AA", "01")),
-        regexp="areas codes must take the form XX or XX-YY, the following are invalid: 00, 01", fixed=TRUE)
+        regexp="Area codes must take the form XX, XX-YY, or XX-YYY. The following are invalid: 00, 01", fixed=TRUE)
     expect_error(check_areas(c("AA", "all")),
-        regexp="areas codes must take the form XX or XX-YY, the following are invalid: all", fixed=TRUE)
+        regexp="Area codes must take the form XX, XX-YY, or XX-YYY. The following are invalid: all", fixed=TRUE)
 
     expect_silent(check_areas("all"))
     expect_silent(check_areas("AA"))
@@ -89,4 +89,3 @@ test_that("correctly checks population codes", {
     expect_silent(check_pop("i"))
     expect_silent(check_pop(c("i", "j")))
 })
-

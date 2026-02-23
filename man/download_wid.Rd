@@ -81,7 +81,7 @@ following columns:
 }
 \description{
 Downloads data from the World Wealth and Income Database
-(\url{http://WID.world}) into a \code{data.frame}.
+(\url{https://wid.world}) into a \code{data.frame}.
 Type \code{vignette("wid-demo")} for a detailed presentation.
 }
 \details{
@@ -112,7 +112,7 @@ a top 1\% share of 20\% is given as 0.2. A wealth/income ratio of
 The arguments of the command follow a nomenclature specific to WID.world.
 We provide more details with a few examples below. \strong{For the complete
 up-to-date documentation of the structure of the database, please visit
-\url{https://wid.world/codes-dictionary}.}
+\url{https://wid.world/codes-dictionary/}.}
 
 \subsection{Indicators}{
 The argument \code{indicators} is a vector of 6-letter codes that corresponds to a
@@ -203,7 +203,7 @@ Some of the most common possibilities include:
 \code{992} \tab      \tab ages 20 and older \cr
 }
 If you don't specify any age, it defaults to \code{"all"} and downloads
-data for all available age groups. Visit \url{https://wid.world/codes-dictionary/} 
+data for all available age groups. Visit \url{https://wid.world/codes-dictionary/}
 for a comprehensive list of options.
 }
 

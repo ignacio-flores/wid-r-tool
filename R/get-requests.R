@@ -11,6 +11,10 @@
 #' @importFrom httr GET add_headers content
 #' @importFrom base64enc base64encode
 #' @importFrom jsonlite fromJSON
+#' @importFrom utils capture.output str
+
+environment <- "prod" # "dev" or "prod"
+base_api_url <- paste0("https://rfap9nitz6.execute-api.eu-west-1.amazonaws.com/", environment, "/")
 
 get_variables_areas <- function(areas, sixlet = "all") {
     # Concatenate area codes
@@ -18,7 +22,7 @@ get_variables_areas <- function(areas, sixlet = "all") {
 
     # Perform request
     url <- paste0(
-        "https://rfap9nitz6.execute-api.eu-west-1.amazonaws.com/prod/",
+        base_api_url,
         "countries-available-variables?countries=", query_areas, "&variables=", sixlet
     )
     response_request <- GET(url, add_headers("x-api-key" = base64encode(api_key)))
@@ -75,14 +79,45 @@ get_data_variables <- function(areas, variables, no_extrapolation = FALSE) {
 
     # Perform request
     url <- paste0(
-        "https://rfap9nitz6.execute-api.eu-west-1.amazonaws.com/prod/",
+        base_api_url,
         "countries-variables?countries=", query_areas,
         "&variables=", query_variables, "&years=all"
     )
     response_request <- GET(url, add_headers("x-api-key" = base64encode(api_key)))
     response_content <- content(response_request, as = "text", encoding = "UTF-8")
     response_json <- fromJSON(response_content, simplifyVector = FALSE)
-
+    
+    #handle large payload 
+    if (is.list(response_json) && !is.null(response_json$status)) {
+        if (response_json$status == "payload_too_large") {
+            message("Downloading large data from alternative route (please wait)")
+            if (isTRUE(getOption("wid.debug"))) {
+                payload_summary <- capture.output(str(response_json))
+                message("Large payload response summary:\n", paste(payload_summary, collapse = "\n"))
+            }
+            download_url <- response_json$download_url
+            if (is.null(download_url) || is.na(download_url) || download_url == "") {
+                stop("could not download large result: missing download URL.")
+            }
+            response_request <- GET(download_url)
+            response_content <- content(response_request, as = "text", encoding = "UTF-8")
+            response_json <- fromJSON(response_content, simplifyVector = FALSE)
+        } else {
+            server_message <- response_json$message
+            if (is.null(server_message) || is.na(server_message) || server_message == "") {
+                server_message <- "server response invalid"
+            }
+            stop(server_message)
+        }
+    }
+    if (length(response_json) == 1 && is.null(names(response_json))) {
+        response_json <- response_json[[1]]
+    }
+    if (!is.list(response_json)) {
+        stop("server response invalid")
+    }
+    
+    
     response_table <- data.frame()
     for (variable in names(response_json)) {
         json_variable <- response_json[[variable]]
@@ -154,7 +189,8 @@ get_data_variables <- function(areas, variables, no_extrapolation = FALSE) {
 #'
 #' @param areas List of area codes.
 #' @param variables List of variables, of the form: \code{"xxxxxx_pXXpYY_999_i"}
-#'
+#' @param report_missing Logical: report any missing metadata when set to TRUE.
+#' @param collected_metadata List used to accumulate missing metadata across calls.
 #' @importFrom httr GET add_headers content
 #' @importFrom base64enc base64encode
 #' @importFrom jsonlite fromJSON
@@ -166,7 +202,7 @@ get_metadata_variables <- function(areas, variables, report_missing = TRUE, coll
 
     # Perform request
     url <- paste0(
-        "https://rfap9nitz6.execute-api.eu-west-1.amazonaws.com/prod/",
+        base_api_url,
         "countries-variables-metadata?countries=", query_areas,
         "&variables=", query_variables)
     response_request <- GET(url, add_headers("x-api-key" = base64encode(api_key)))

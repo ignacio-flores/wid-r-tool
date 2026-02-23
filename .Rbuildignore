@@ -2,3 +2,7 @@
 ^\.Rproj\.user$
 ^doc$
 ^Meta$
+^\.git$
+^\.gitignore$
+^\.?\.Rcheck$
+^vignettes$
