@@ -1,9 +1,14 @@
 
 # R package to download data from the World Inequality Database (WID.world)
 
+<<<<<<< master
 This package downloads data from the online World Inequality
 Database (WID.world) directly into R. The World Inequality Database is an
 extensive source on the historical evolution of the
+=======
+This package downloads data from the online World Inequality Database (WID.world) directly into R. The World Inequality
+Database is an extensive source on the historical evolution of the
+>>>>>>> master
 distribution of income and wealth both within and between countries.
 It relies on the combined effort of an international network of over a
 hundred researchers covering more than seventy countries from all continents.
